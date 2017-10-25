@@ -85,4 +85,13 @@ export const getAllComments = (postId) => {
     .catch(err => console.error('api.js error: ', err));
 }
 
+export const postComment = comment => {
+  return fetch(`${baseurl}/comments`, { 
+    method: 'POST',
+    body: JSON.stringify(comment),
+    headers
+  })
+  .then(res => res.json())
+  .catch(err => console.error('api.js error: ', err));
+}
 

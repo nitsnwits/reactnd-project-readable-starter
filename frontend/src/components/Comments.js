@@ -11,7 +11,8 @@ import {
 import { upvote, downvote, deletePost } from '../actions';
 import { Link } from 'react-router-dom';
 import { isEmpty } from 'lodash';
-import { fetchAllComments } from '../actions';
+import { fetchAllComments, addComment } from '../actions';
+import uuid from 'uuid/v4';
 
 function FieldGroup({ id, label, help, ...props }) {
   return (
@@ -22,40 +23,47 @@ function FieldGroup({ id, label, help, ...props }) {
     </FormGroup>
   );
 }
-
 class Comments extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
-      body: ''
+      body: '',
+      author: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
-    let title, body;
+    let comment, author;
     switch (event.target.id)  {
-      case 'title':
-        title = event.target.value;
+      case 'comment':
+        comment = event.target.value;
+        this.setState({ body: comment });
         break;
-      case 'content':
-        body = event.target.value;
+      case 'author':
+        author = event.target.value;
+        this.setState({ author });
         break;
       default:
         return;
     }
-    title && this.setState({ title });
-    body && this.setState({ body });
+    return;
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    //this.props.handleEdit(id, this.state.title, this.state.body);
-    //this.props.history.push(`/${category}`);
-    return;
+    const newComment = Object.assign({}, this.state, {
+      id: uuid(),
+      timestamp: Date.now(),
+      parentId: this.props.post
+    });
+    this.setState({
+      body: '',
+      author: ''
+    });
+    this.props.addComment(newComment);
   }
   
   componentWillMount() {
@@ -74,30 +82,66 @@ class Comments extends Component {
               </Panel>
             </div>
           ))}
-          <form onChange={this.handleChange} onSubmit={this.handleSubmit}>
-            <FieldGroup
-              id="comment"
-              type="comment"
-              label="Add comment"
-              placeholder="Add your comment here"
-            />
-            <Button type="submit">
-              Submit
-            </Button>
-            <Button href="/">
-              Cancel
-            </Button>
-          </form>
+          <div>
+            <form onChange={this.handleChange} onSubmit={this.handleSubmit}>
+              <FieldGroup
+                id="comment"
+                type="comment"
+                placeholder="Add your comment here"
+                value={this.state.body}
+              />
+              <FieldGroup
+                id="author"
+                type="author"
+                placeholder="Your name"
+                value={this.state.author}
+              />
+              <Button type="submit">
+                Submit
+              </Button>
+              <Link to={`/`}>
+                <Button>
+                  Cancel
+                </Button>
+              </Link>
+            </form>
+          </div>
         </div>
       );
     } else {
-      return (<div></div>);
+      return (
+        <div>
+        <form onChange={this.handleChange} onSubmit={this.handleSubmit}>
+          <FieldGroup
+            id="comment"
+            type="comment"
+            placeholder="Add your comment here"
+            value={this.state.body}
+          />
+          <FieldGroup
+            id="author"
+            type="author"
+            placeholder="Your name"
+            value={this.state.author}
+          />
+          <Button type="submit">
+            Submit
+          </Button>
+          <Link to={`/`}>
+            <Button>
+              Cancel
+            </Button>
+          </Link>
+        </form>
+      </div>
+      );
     }
   }
 }
 
 function mapStateToProps(state, ownProps) {
   let comments = [];
+  console.log('got new state %j', state.posts);
   if (!isEmpty(state.posts)) {
     const post = state.posts.filter(post => {
       return post.id === ownProps.post;
@@ -106,12 +150,15 @@ function mapStateToProps(state, ownProps) {
       comments = post[0].comments;
     }
   }
-  return { comments };
+  let numOfComments = 0;
+  if (comments) numOfComments = comments.length;
+  return { comments, numOfComments };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    getComments: postId => dispatch(fetchAllComments(postId))
+    getComments: postId => dispatch(fetchAllComments(postId)),
+    addComment: comment => dispatch(addComment(comment))
     // handleUpvote: postId => dispatch(upvote(postId)),
     // handleDownvote: postId => dispatch(downvote(postId)),
     // handleDelete: postId => dispatch(deletePost(postId))

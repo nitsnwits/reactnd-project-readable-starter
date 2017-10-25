@@ -1,5 +1,5 @@
-import { GET_ALL_POSTS, SORT_POSTS_BY, UPVOTE, DOWNVOTE, DELETE_POST, EDIT_POST, GET_ALL_COMMENTS } from './types';
-import { getAllPosts, upvotePost, downvotePost, deletePostByPostId, editPostByPostId, getAllComments } from '../utils/api';
+import { GET_ALL_POSTS, SORT_POSTS_BY, UPVOTE, DOWNVOTE, DELETE_POST, EDIT_POST, GET_ALL_COMMENTS, ADD_COMMENT } from './types';
+import { getAllPosts, upvotePost, downvotePost, deletePostByPostId, editPostByPostId, getAllComments, postComment } from '../utils/api';
 
 export const handleAllPosts = response => ({
   type: GET_ALL_POSTS,
@@ -80,6 +80,19 @@ export const fetchAllComments = postId => {
   return dispatch => {
     return getAllComments(postId)
       .then(comments => dispatch(handleComments(comments)))
+      .catch(err => console.error('action error: ', err));
+  }
+}
+
+export const handleAddComment = response => ({
+  type: ADD_COMMENT,
+  response
+});
+
+export const addComment = comment => {
+  return dispatch => {
+    return postComment(comment)
+      .then(comment => dispatch(handleAddComment(comment)))
       .catch(err => console.error('action error: ', err));
   }
 }
