@@ -9,7 +9,9 @@ import {
   ADD_COMMENT,
   UPVOTE_COMMENT,
   DOWNVOTE_COMMENT,
-  DELETE_COMMENT
+  DELETE_COMMENT,
+  EDIT_COMMENT,
+  CREATE_POST
 } from './types';
 import {
   getAllPosts,
@@ -21,7 +23,9 @@ import {
   postComment,
   upvoteCommentApi,
   downvoteCommentApi,
-  deleteCommentApi
+  deleteCommentApi,
+  editCommentApi,
+  createPostApi
 } from '../utils/api';
 
 export const handleAllPosts = response => ({
@@ -120,6 +124,19 @@ export const editPost = (postId, title, body) => {
   }
 }
 
+export const handleEditComment = response => ({
+  type: EDIT_COMMENT,
+  response
+});
+
+export const editComment = (commentId, body) => {
+  return dispatch => {
+    return editCommentApi(commentId, body)
+      .then(comment => dispatch(handleEditComment(comment)))
+      .catch(err => console.error('action error: ', err));
+  }
+}
+
 export const handleComments = response => ({
   type: GET_ALL_COMMENTS,
   response
@@ -155,6 +172,19 @@ export const deleteComment = commentId => {
   return dispatch => {
     return deleteCommentApi(commentId)
       .then(comment => dispatch(handleDeleteComment(commentId)))
+      .catch(err => console.error('action error: ', err));
+  }
+}
+
+export const handleCreatePost = response => ({
+  type: CREATE_POST,
+  response
+});
+
+export const createPost = post => {
+  return dispatch => {
+    return createPostApi(post)
+      .then(post => dispatch(handleCreatePost(post)))
       .catch(err => console.error('action error: ', err));
   }
 }

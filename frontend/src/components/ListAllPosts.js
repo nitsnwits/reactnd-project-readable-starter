@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchAllPosts, sortPostsBy } from '../actions';
 import ListPosts from './ListPosts';
-import { DropdownButton, MenuItem } from 'react-bootstrap';
+import { DropdownButton, MenuItem, Button } from 'react-bootstrap';
 import { isEmpty } from 'lodash';
+import { Link } from 'react-router-dom';
 
 
 class ListAllPosts extends Component {
@@ -30,6 +31,7 @@ class ListAllPosts extends Component {
       return (
         <div>
           <div className="form-inline text-right">
+          <Link to={`/new/post`}><Button bsStyle="default">Create Post</Button></Link>
           <DropdownButton bsStyle="default" title={`Sort by ${this.state.sortBy}`} key={sortPostsBy} id="sort" onSelect={this.handleSelect.bind(this)}>
             <MenuItem eventKey="timestamp" >Time</MenuItem>
             <MenuItem eventKey="voteScore">Votes</MenuItem>

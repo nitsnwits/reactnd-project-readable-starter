@@ -124,3 +124,23 @@ export const deleteCommentApi = commentId => {
   .catch(err => console.error('api.js error: ', err));
 }
 
+export const editCommentApi = (commentId, body) => {
+  return fetch(`${baseurl}/comments/${commentId}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ body })
+  })
+  .then(res => res.json())
+  .catch(err => console.error('api.js error: ', err));
+}
+
+export const createPostApi = post => {
+  return fetch(`${baseurl}/posts`, {
+    method: 'POST',
+    headers, 
+    body: JSON.stringify(post)
+  })
+  .then(res => res.json())
+  .catch(err => console.error('api.js error: ', err));
+}
+

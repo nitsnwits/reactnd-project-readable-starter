@@ -88,6 +88,7 @@ class Comments extends Component {
                     <Button onClick={handleUpvote.bind(this, comment.id)}><Glyphicon glyph="thumbs-up"/></Button>&nbsp;
                     <Button onClick={handleDownvote.bind(this, comment.id)}><Glyphicon glyph="thumbs-down"/></Button>&nbsp;
                     <Button bsStyle="danger" onClick={handleDelete.bind(this, comment.id)}>Delete Comment</Button>&nbsp;
+                    <Link to={`/comments/${comment.id}/edit`}><Button bsStyle="warning">Edit Comment</Button></Link>&nbsp;
                   </ListGroupItem>
                 </ListGroup>
               </Panel>
@@ -151,7 +152,6 @@ class Comments extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  console.log('new state ', state)
   let comments = [];
   if (!isEmpty(state.posts)) {
     const post = state.posts.filter(post => {

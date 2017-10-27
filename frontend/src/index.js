@@ -12,6 +12,8 @@ import Header from './components/Header';
 import ListPostsByCategory from './components/ListPostsByCategory';
 import PostEdit from './components/PostEdit';
 import PostDetail from './components/PostDetail';
+import CommentEdit from './components/CommentEdit';
+import PostCreate from './components/PostCreate';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
@@ -34,6 +36,8 @@ ReactDOM.render(
         <Route exact path="/:category" component={ListPostsByCategory}/>
         <Route exact path="/posts/:post/edit" component={PostEdit}/>
         <Route exact path="/posts/:post" component={PostDetail}/>
+        <Route exact path="/comments/:comment/edit" component={CommentEdit}/>
+        <Route exact path="/new/post" component={PostCreate}/>
       </div>
     </BrowserRouter>
   </Provider>,

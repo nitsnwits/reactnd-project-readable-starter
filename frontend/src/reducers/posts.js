@@ -9,7 +9,9 @@ import {
   ADD_COMMENT,
   UPVOTE_COMMENT,
   DOWNVOTE_COMMENT,
-  DELETE_COMMENT
+  DELETE_COMMENT,
+  EDIT_COMMENT,
+  CREATE_POST
 } from '../actions/types';
 import { sortBy } from 'lodash';
 
@@ -95,6 +97,23 @@ export default function posts(state = {}, action) {
         return updatedPost;
       });
       return stateWithDeletedComment;
+    case EDIT_COMMENT:
+      const stateWithEditedComment = state.map(post => {
+        const updatedPost = Object.assign({}, post);
+        if (post.comments && post.comments.length > 0) {
+          post.comments.forEach((comment, index) => {
+            if (comment.id === action.response.id) {
+              updatedPost.comments[index] = action.response;
+            }
+          });
+        }
+        return updatedPost;
+      });
+      return stateWithEditedComment;
+    case CREATE_POST:
+      const stateWithCreatedPost = Object.assign([], state);
+      stateWithCreatedPost.push(action.response);
+      return stateWithCreatedPost;
     default:
       return state;
   }

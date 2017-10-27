@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar } from 'react-bootstrap';
 
-export default function ListCategories({ list }) {
+export default function Header({ list }) {
   return (
     <div className="app-navbar">
       <Navbar fixedTop>
