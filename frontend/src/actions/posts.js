@@ -1,5 +1,26 @@
-import { GET_ALL_POSTS, SORT_POSTS_BY, UPVOTE, DOWNVOTE, DELETE_POST, EDIT_POST, GET_ALL_COMMENTS, ADD_COMMENT } from './types';
-import { getAllPosts, upvotePost, downvotePost, deletePostByPostId, editPostByPostId, getAllComments, postComment } from '../utils/api';
+import {
+  GET_ALL_POSTS,
+  SORT_POSTS_BY,
+  UPVOTE,
+  DOWNVOTE,
+  DELETE_POST,
+  EDIT_POST,
+  GET_ALL_COMMENTS,
+  ADD_COMMENT,
+  UPVOTE_COMMENT,
+  DOWNVOTE_COMMENT
+} from './types';
+import {
+  getAllPosts,
+  upvotePost,
+  downvotePost,
+  deletePostByPostId,
+  editPostByPostId,
+  getAllComments,
+  postComment,
+  upvoteCommentApi,
+  downvoteCommentApi
+} from '../utils/api';
 
 export const handleAllPosts = response => ({
   type: GET_ALL_POSTS,
@@ -37,11 +58,37 @@ export const upvote = postId => {
   }
 }
 
+export const handleUpvoteComment = response => ({
+  type: UPVOTE_COMMENT,
+  response
+});
+
+export const upvoteComment = commentId => {
+  return dispatch => {
+    return upvoteCommentApi(commentId)
+    .then(comment => dispatch(handleUpvoteComment(comment)))
+    .catch(err => console.error('action error: ', err));
+  }
+}
+
 export const downvote = postId => {
   return dispatch => {
     return downvotePost(postId)
       .then(post => dispatch(handleDownvote(post)))
       .catch(err => console.error('action error: ', err));
+  }
+}
+
+export const handleDownvoteComment = response => ({
+  type: DOWNVOTE_COMMENT,
+  response
+});
+
+export const downvoteComment = commentId => {
+  return dispatch => {
+    return downvoteCommentApi(commentId)
+    .then(comment => dispatch(handleDownvoteComment(comment)))
+    .catch(err => console.error('action error: ', err));
   }
 }
 
@@ -96,4 +143,3 @@ export const addComment = comment => {
       .catch(err => console.error('action error: ', err));
   }
 }
-

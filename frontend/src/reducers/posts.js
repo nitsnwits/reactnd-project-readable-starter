@@ -1,4 +1,15 @@
-import { GET_ALL_POSTS, SORT_POSTS_BY, UPVOTE, DOWNVOTE, DELETE_POST, EDIT_POST, GET_ALL_COMMENTS, ADD_COMMENT } from '../actions/types';
+import {
+  GET_ALL_POSTS,
+  SORT_POSTS_BY,
+  UPVOTE,
+  DOWNVOTE,
+  DELETE_POST,
+  EDIT_POST,
+  GET_ALL_COMMENTS,
+  ADD_COMMENT,
+  UPVOTE_COMMENT,
+  DOWNVOTE_COMMENT
+} from '../actions/types';
 import { sortBy } from 'lodash';
 
 export default function posts(state = {}, action) {
@@ -56,6 +67,20 @@ export default function posts(state = {}, action) {
         return post;
       });
       return stateWithAddedComment;
+    case UPVOTE_COMMENT:
+    case DOWNVOTE_COMMENT:
+      const stateWithUpvotedComment = state.map(post => {
+        const updatedPost = Object.assign({}, post);
+        if (post.comments && post.comments.length > 0) {
+          post.comments.forEach((comment, index) => {
+            if (comment.id === action.response.id) {
+              updatedPost.comments[index] = action.response;
+            }
+          });
+        }
+        return updatedPost;
+      });
+      return stateWithUpvotedComment;
     default:
       return state;
   }

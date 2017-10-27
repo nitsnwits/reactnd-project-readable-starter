@@ -47,6 +47,16 @@ export const upvotePost = (postId) => {
     .catch(err => console.error('api.js error: ', err));
 }
 
+export const upvoteCommentApi = commentId => {
+  return fetch(`${baseurl}/comments/${commentId}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ option: 'upVote'})
+  })
+  .then(res => res.json())
+  .catch(err => console.error('api.js error: ', err));
+}
+
 export const downvotePost = (postId) => {
   return fetch(`${baseurl}/posts/${postId}`, {
       method: 'POST',
@@ -55,6 +65,16 @@ export const downvotePost = (postId) => {
     })
     .then(res => res.json())
     .catch(err => console.error('api.js error: ', err));
+}
+
+export const downvoteCommentApi = commentId => {
+  return fetch(`${baseurl}/comments/${commentId}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ option: 'downVote'})
+  })
+  .then(res => res.json())
+  .catch(err => console.error('api.js error: ', err));
 }
 
 export const deletePostByPostId = (postId) => {

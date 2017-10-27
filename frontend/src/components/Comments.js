@@ -6,12 +6,15 @@ import {
   FormControl,
   HelpBlock,
   Button,
-  Panel
+  Panel,
+  Glyphicon,
+  ListGroup,
+  ListGroupItem,
+  Badge
 } from 'react-bootstrap';
-import { upvote, downvote, deletePost } from '../actions';
 import { Link } from 'react-router-dom';
 import { isEmpty } from 'lodash';
-import { fetchAllComments, addComment } from '../actions';
+import { fetchAllComments, addComment, upvoteComment, downvoteComment } from '../actions';
 import uuid from 'uuid/v4';
 
 function FieldGroup({ id, label, help, ...props }) {
@@ -71,7 +74,7 @@ class Comments extends Component {
   }
 
   render() {
-    const { comments } = this.props;
+    const { comments, handleUpvote, handleDownvote } = this.props;
     if (!isEmpty(comments)) {
       return (
         <div>
@@ -79,6 +82,13 @@ class Comments extends Component {
             <div key={comment.id}>
               <Panel footer={`posted by ${comment.author}`}>
                 {comment.body}
+                <ListGroup fill>
+                  <ListGroupItem>
+                    <Badge>votes: {comment.voteScore}</Badge>&nbsp;
+                    <Button onClick={handleUpvote.bind(this, comment.id)}><Glyphicon glyph="thumbs-up"/></Button>&nbsp;
+                    <Button onClick={handleDownvote.bind(this, comment.id)}><Glyphicon glyph="thumbs-down"/></Button>&nbsp;
+                  </ListGroupItem>
+                </ListGroup>
               </Panel>
             </div>
           ))}
@@ -140,8 +150,8 @@ class Comments extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
+  console.log('new state ', state)
   let comments = [];
-  console.log('got new state %j', state.posts);
   if (!isEmpty(state.posts)) {
     const post = state.posts.filter(post => {
       return post.id === ownProps.post;
@@ -151,16 +161,18 @@ function mapStateToProps(state, ownProps) {
     }
   }
   let numOfComments = 0;
+  let sumVotes = 0;
   if (comments) numOfComments = comments.length;
-  return { comments, numOfComments };
+  if (comments) comments.forEach(comment => {sumVotes += comment.voteScore});
+  return { comments, numOfComments, sumVotes };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     getComments: postId => dispatch(fetchAllComments(postId)),
-    addComment: comment => dispatch(addComment(comment))
-    // handleUpvote: postId => dispatch(upvote(postId)),
-    // handleDownvote: postId => dispatch(downvote(postId)),
+    addComment: comment => dispatch(addComment(comment)),
+    handleUpvote: commentId => dispatch(upvoteComment(commentId)),
+    handleDownvote: commentId => dispatch(downvoteComment(commentId)),
     // handleDelete: postId => dispatch(deletePost(postId))
   }
 };
