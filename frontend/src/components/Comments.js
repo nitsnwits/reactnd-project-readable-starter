@@ -14,7 +14,7 @@ import {
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { isEmpty } from 'lodash';
-import { fetchAllComments, addComment, upvoteComment, downvoteComment } from '../actions';
+import { fetchAllComments, addComment, upvoteComment, downvoteComment, deleteComment } from '../actions';
 import uuid from 'uuid/v4';
 
 function FieldGroup({ id, label, help, ...props }) {
@@ -74,7 +74,7 @@ class Comments extends Component {
   }
 
   render() {
-    const { comments, handleUpvote, handleDownvote } = this.props;
+    const { comments, handleUpvote, handleDownvote, handleDelete } = this.props;
     if (!isEmpty(comments)) {
       return (
         <div>
@@ -87,6 +87,7 @@ class Comments extends Component {
                     <Badge>votes: {comment.voteScore}</Badge>&nbsp;
                     <Button onClick={handleUpvote.bind(this, comment.id)}><Glyphicon glyph="thumbs-up"/></Button>&nbsp;
                     <Button onClick={handleDownvote.bind(this, comment.id)}><Glyphicon glyph="thumbs-down"/></Button>&nbsp;
+                    <Button bsStyle="danger" onClick={handleDelete.bind(this, comment.id)}>Delete Comment</Button>&nbsp;
                   </ListGroupItem>
                 </ListGroup>
               </Panel>
@@ -173,7 +174,7 @@ function mapDispatchToProps(dispatch) {
     addComment: comment => dispatch(addComment(comment)),
     handleUpvote: commentId => dispatch(upvoteComment(commentId)),
     handleDownvote: commentId => dispatch(downvoteComment(commentId)),
-    // handleDelete: postId => dispatch(deletePost(postId))
+    handleDelete: commentId => dispatch(deleteComment(commentId))
   }
 };
 

@@ -8,7 +8,8 @@ import {
   GET_ALL_COMMENTS,
   ADD_COMMENT,
   UPVOTE_COMMENT,
-  DOWNVOTE_COMMENT
+  DOWNVOTE_COMMENT,
+  DELETE_COMMENT
 } from './types';
 import {
   getAllPosts,
@@ -19,7 +20,8 @@ import {
   getAllComments,
   postComment,
   upvoteCommentApi,
-  downvoteCommentApi
+  downvoteCommentApi,
+  deleteCommentApi
 } from '../utils/api';
 
 export const handleAllPosts = response => ({
@@ -143,3 +145,18 @@ export const addComment = comment => {
       .catch(err => console.error('action error: ', err));
   }
 }
+
+export const handleDeleteComment = id => ({
+  type: DELETE_COMMENT,
+  response: id
+})
+
+export const deleteComment = commentId => {
+  return dispatch => {
+    return deleteCommentApi(commentId)
+      .then(comment => dispatch(handleDeleteComment(commentId)))
+      .catch(err => console.error('action error: ', err));
+  }
+}
+
+

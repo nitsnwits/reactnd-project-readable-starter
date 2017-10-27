@@ -8,7 +8,8 @@ import {
   GET_ALL_COMMENTS,
   ADD_COMMENT,
   UPVOTE_COMMENT,
-  DOWNVOTE_COMMENT
+  DOWNVOTE_COMMENT,
+  DELETE_COMMENT
 } from '../actions/types';
 import { sortBy } from 'lodash';
 
@@ -81,6 +82,19 @@ export default function posts(state = {}, action) {
         return updatedPost;
       });
       return stateWithUpvotedComment;
+    case DELETE_COMMENT:
+      const stateWithDeletedComment = state.map(post => {
+        const updatedPost = Object.assign({}, post);
+        if (post.comments && post.comments.length > 0) {
+          post.comments.forEach((comment, index) => {
+            if (comment.id === action.response) {
+              updatedPost.comments.splice(index, 1);
+            }
+          });
+        }
+        return updatedPost;
+      });
+      return stateWithDeletedComment;
     default:
       return state;
   }

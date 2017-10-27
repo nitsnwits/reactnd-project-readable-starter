@@ -115,3 +115,12 @@ export const postComment = comment => {
   .catch(err => console.error('api.js error: ', err));
 }
 
+export const deleteCommentApi = commentId => {
+  return fetch(`${baseurl}/comments/${commentId}`, {
+    method: 'DELETE',
+    headers
+  })
+  .then(res => res.json())
+  .catch(err => console.error('api.js error: ', err));
+}
+
